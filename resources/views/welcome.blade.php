@@ -27,7 +27,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2">
                         <div class="p-6">
                             <div class="flex items-center">
-                                <div class="ml-4 text-lg leading-7 font-semibold">Register</div>
+                                <div class="ml-4 text-lg leading-7 font-semibold">1. Register</div>
                             </div>
 
                             <div class="ml-12">
@@ -39,7 +39,7 @@
 
                         <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-t-0 md:border-l">
                             <div class="flex items-center">
-                                <div class="ml-4 text-lg leading-7 font-semibold">Authenticate</div>
+                                <div class="ml-4 text-lg leading-7 font-semibold">2. Authenticate</div>
                             </div>
 
                             <div class="ml-12">
@@ -53,7 +53,7 @@
 
                         <div class="p-6 border-t border-gray-200 dark:border-gray-700">
                             <div class="flex items-center">
-                                <div class="ml-4 text-lg leading-7 font-semibold">Get the weather</div>
+                                <div class="ml-4 text-lg leading-7 font-semibold">3. Get the weather</div>
                             </div>
 
                             <div class="ml-12">
@@ -65,7 +65,7 @@
 
                         <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-l">
                             <div class="flex items-center">
-                                <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">Explore</div>
+                                <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">4. Explore</div>
                             </div>
 
                             <div class="ml-12">
