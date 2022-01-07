@@ -25,8 +25,9 @@ class WeatherController extends Controller
                 'weather' => 'You can use the "current", "today", "two-day" and "three-day" endpoints to get up-to-date weather information.',
                 'units' => 'Default units are Celsius for temperature and miles for distance. These can be changed with the "set-units" endpoint. Appropriate values are "c" or "f" for "temp", and "mph" or "kph" for "speed".',
                 'location' => 'Default location is "Manchester, UK". This can be changed with the "set-location" endpoint using the "location" parameter. Both location names and coordinates are accepted.',
+                'astronomy' => 'Astronomy data is disabled by default. This can be changed with the "set-astronomy" endpoint using the "astro" parameter (1 or 0).',
                 'raw-data' => 'Raw data can be requested by sending a value for raw with the GET request.',
-                'dynamic-settings' => 'Units and location can be changed for a particular call by using GET parameters. These will not be saved for future use.',
+                'dynamic-settings' => 'All settings can be changed for a particular call by using GET parameters. These will not be saved for future use.',
             ],
         ]);
     }
@@ -44,6 +45,10 @@ class WeatherController extends Controller
     protected function getSpeedUnit(): string
     {
         return $this->request->speed ?: $this->request->session()->get('speed') ?: 'mph';
+    }
+
+    protected function getAstronomy(): bool {
+        return (bool) $this->request->astro ?: $this->request->session()->get('astro') ?: false;
     }
 
     public function setLocation(Request $request): JsonResponse
@@ -79,6 +84,16 @@ class WeatherController extends Controller
             return $this->sendSuccess('Units set');
         }
         return $this->sendError('Units not provided. Pass parameters "temp" and "speed" to set units.');
+    }
+
+    public function setAstronomy(Request $request): JsonResponse
+    {
+        if (!empty($request->astro)) {
+            $request->session()->put('astro', $request->astro);
+            $request->session()->save();
+            return $this->sendSuccess('Astronomy details: ' . $request->astro ? 'enabled' : 'disabled');
+        }
+        return $this->sendError('Astronomy preference not provided');
     }
 
     public function current(Request $request): JsonResponse
@@ -195,6 +210,9 @@ class WeatherController extends Controller
                 'date' => $forecastDay['date'],
                 'day' => $this->formatWeather($forecastDay['day']),
             ];
+            if ($this->getAstronomy()) {
+                $formatted[$key]['astronomy'] = $forecastDay['astro'];
+            }
             if (!empty($this->request->hours)) {
                 foreach ($forecastDay['hour'] as $forecastHour) {
                     if ($today == $forecastDay['date'] && $hour > $forecastHour['time']) {
