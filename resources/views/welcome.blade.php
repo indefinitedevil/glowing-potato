@@ -78,8 +78,10 @@
                 </div>
 
                 <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
-                    <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
-                        This basic weather API brought to you by the Emperor of the Moon, Eligos Alexander
+                    <div class="ml-4 text-center text-sm text-gray-500 sm:text-left sm:ml-0">
+                        This basic weather API integration brought to you by the Emperor of the Moon, Eligos Alexander
+                        <br>
+                        Powered by <a href="https://www.weatherapi.com/" title="Weather API">WeatherAPI.com</a>
                     </div>
                 </div>
             </div>

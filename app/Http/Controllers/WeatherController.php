@@ -22,11 +22,11 @@ class WeatherController extends Controller
     {
         return response()->json([
             'help' => [
-                'weather' => 'You can use the "current", "today", "three-day" and "seven-day" endpoints to get up-to-date weather information.',
+                'weather' => 'You can use the "current", "today", "two-day" and "three-day" endpoints to get up-to-date weather information.',
                 'units' => 'Default units are Celsius for temperature and miles for distance. These can be changed with the "set-units" endpoint. Appropriate values are "c" or "f" for "temp", and "mph" or "kph" for "speed".',
-                'location' => 'Default location is "Manchester, UK". This can be changed with the "set-location" endpoint using the "location" parameter.',
+                'location' => 'Default location is "Manchester, UK". This can be changed with the "set-location" endpoint using the "location" parameter. Both location names and coordinates are accepted.',
                 'raw-data' => 'Raw data can be requested by sending a value for raw with the GET request.',
-                'dynamic-settings' => 'Units and location can be changed for a particular call by setting values on the GET request. These will not be saved for future use.',
+                'dynamic-settings' => 'Units and location can be changed for a particular call by using GET parameters. These will not be saved for future use.',
             ],
         ]);
     }
@@ -91,6 +91,7 @@ class WeatherController extends Controller
     public function today(Request $request): JsonResponse
     {
         $this->request = $request;
+        $this->request->hours = 1;
         $url = sprintf(self::WEATHER_API_FORECAST, env('WEATHER_API_KEY'), $this->getLocation(), 1);
         return $this->fetchWeather($url);
     }
@@ -102,10 +103,10 @@ class WeatherController extends Controller
         return $this->fetchWeather($url);
     }
 
-    public function forecast7(Request $request): JsonResponse
+    public function forecast2(Request $request): JsonResponse
     {
         $this->request = $request;
-        $url = sprintf(self::WEATHER_API_FORECAST, env('WEATHER_API_KEY'), $this->getLocation(), 7);
+        $url = sprintf(self::WEATHER_API_FORECAST, env('WEATHER_API_KEY'), $this->getLocation(), 2);
         return $this->fetchWeather($url);
     }
 
@@ -145,7 +146,7 @@ class WeatherController extends Controller
 
     protected function formatLocation($location): array
     {
-        $keys = ['name', 'region', 'country'];
+        $keys = ['name', 'region', 'country', 'lat', 'lon'];
         return array_intersect_key($location, array_flip($keys));
     }
 
@@ -194,11 +195,13 @@ class WeatherController extends Controller
                 'date' => $forecastDay['date'],
                 'day' => $this->formatWeather($forecastDay['day']),
             ];
-            foreach ($forecastDay['hour'] as $forecastHour) {
-                if ($today == $forecastDay['date'] && $hour > $forecastHour['time']) {
-                    continue;
+            if (!empty($this->request->hours)) {
+                foreach ($forecastDay['hour'] as $forecastHour) {
+                    if ($today == $forecastDay['date'] && $hour > $forecastHour['time']) {
+                        continue;
+                    }
+                    $formatted[$key]['hour'][] = $this->formatWeather($forecastHour);
                 }
-                $formatted[$key]['hour'][] = $this->formatWeather($forecastHour);
             }
         }
         return $formatted;

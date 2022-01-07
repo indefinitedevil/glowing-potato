@@ -34,8 +34,8 @@ Route::group([
     Route::get('/help', [WeatherController::class, 'help']);
     Route::get('/current', [WeatherController::class, 'current']);
     Route::get('/today', [WeatherController::class, 'today']);
+    Route::get('/two-day', [WeatherController::class, 'forecast2']);
     Route::get('/three-day', [WeatherController::class, 'forecast3']);
-    Route::get('/seven-day', [WeatherController::class, 'forecast7']);
     Route::post('/set-location', [WeatherController::class, 'setLocation']);
     Route::post('/set-units', [WeatherController::class, 'setUnits']);
 });
